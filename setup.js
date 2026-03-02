@@ -20,9 +20,7 @@ function setup(){
     
     startButton = new Sprite(100,100,100,100);
     startButton.color = "#84b3b0";
-
-    startButton.visible = "hidden";
-
+    continueButton = new Sprite(200,200,100,100);
 
 }
 
@@ -33,12 +31,22 @@ function setup(){
 //
 /*******************************************************/
 function drawStartScreen() {
-    startButton.visible = 'visible';
     if (mouseIsPressed === true) {
-        startButton.fill = '#33767a';
-        gameState = 'gameplay';     
+        gameState = 'instruction';     
     } 
 };
+
+
+/*******************************************************/
+//drawStartScreen()
+//
+//
+/*******************************************************/
+function drawInstructionScreen() {
+    if (mouseIsPressed === true) {
+        gameState = 'gameplay';     
+    }     
+}
 
 
 /*******************************************************/
@@ -47,7 +55,7 @@ function drawStartScreen() {
 //
 /*******************************************************/
 function drawGameplayScreen() {
-    startButton.visible = 'hidden';
+    startButton.visible = "false";
 }
 
 /*******************************************************/

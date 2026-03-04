@@ -17,11 +17,26 @@ let gameState = 'start';
 function setup(){
     cnv = new Canvas(900,900)
 
-    startButton = new Sprite(width/2,height/2,250,100);
+//start button
+    startButton = new Sprite(width/2,height/2,150,50);
     startButton.color = "#84b3b0";
-    continueButton = new Sprite(width/2,height/2,100,100);
+    startButton.text = "Click anywhere to start";
+    startButton,collider = "none";
+
+//continue button
+    continueButton = new Sprite(width/2,height/2,150,50);
+    continueButton.color = "#84b3b0";
+    continueButton.text = "Press 'Enter' to continue"
     continueButton.visible = false
 
+//instruction box
+    instructionBox = new Sprite(width/2, height/2 - 120, 500, 200)
+    instructionBox.color = "#fff";
+    instructionBox.text = "instruction";
+    instructionBox.visible = false;
+    instructionBox.collider = "none";
+
+//player
     player = new Sprite(width/2, 850, 50);
     player.visible = false
 }
@@ -32,9 +47,13 @@ function setup(){
 //
 //
 /*******************************************************/
+function changeGameState() {
+    gameState = 'instruction'
+}
+
 function drawStartScreen() {
-    if (startButton.onMousePressed === true) {
-        gameState = 'instruction';  
+    if (mouseIsPressed === true) {
+        setTimeout(changeGameState, 500);  
         startButton.visible = false;
         startButton.collides = false;
     } 
@@ -47,12 +66,11 @@ function drawStartScreen() {
 //
 /*******************************************************/
 function drawInstructionScreen() {
- 
     continueButton.visible = true;
-    
-    if (mouseIsPressed === true) {
-        gameState = 'gameplay';     
+    instructionBox.visible = true;
 
+    if (mouseIsPressed === true) {       
+     gameState = 'gameplay';     
     }
 }
 
@@ -63,9 +81,9 @@ function drawInstructionScreen() {
 //
 /*******************************************************/
 function drawGameplayScreen() {
-     continueButton.visible = false;
     player.visible = true;
-    
+    instructionBox.visible = false;
+    continueButton.visible = false;
 
 /*******************************************************/
 //player's movements
@@ -95,7 +113,7 @@ function drawGameplayScreen() {
 
 /*******************************************************/
 //draw()
-//if gameState is 'start', call drawStartScreen()
+//if gameState = 'start', call drawStartScreen()
 //
 //
 //

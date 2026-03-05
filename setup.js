@@ -148,7 +148,7 @@ function playerHit() {
 }
 function bulletRain() {
     let x = random(0, 900);
-    bullet = new Sprite(x, -10, 8);
+    bullet = new Sprite(x, 1, 8);
     bullet.vel.y = 5;
     bulletGroup.add(bullet);
     bulletGroup.collides(player, playerHit);

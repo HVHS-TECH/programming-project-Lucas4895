@@ -7,7 +7,7 @@
 
 
 let gameState = 'start';
-
+var score = 0;
 
 /*******************************************************/
 //Setup
@@ -27,6 +27,7 @@ function setup(){
     wallBot.color = "#981"
 
 bulletGroup = new Group();
+collectibleGroup = new Group();
 //start button
     startButton = new Sprite(width/2,height/2,150,50);
     startButton.color = "#84b3b0";
@@ -57,31 +58,36 @@ bulletGroup = new Group();
 
 //player
     player = new Sprite(width/2, 850, 50);
+    player.color = ("#775656")
     player.visible = false
 }
 
 
 /*******************************************************/
 //drawStartScreen()
-//
+//So when mouse is pressed, startButton is hidden
+//and gameState is changed to 'instruction'
 //
 /*******************************************************/
 function changeGameState() {
     gameState = 'instruction'
+
 }
 
 function drawStartScreen() {
     if (mouseIsPressed === true) {
         setTimeout(changeGameState, 150);  
         startButton.visible = false;
-        startButton.collides = false;
     } 
 };
 
 
 /*******************************************************/
 //drawInstructionScreen()
-//
+//enable visibility of continueButton and continueBox
+//If mouse is pressed then gameState is changed to 'gamePlay'
+//endBox being hidden is for when restarting the game,
+//endBox will stay hidden
 //
 /*******************************************************/
 function drawInstructionScreen() {
@@ -97,6 +103,10 @@ function drawInstructionScreen() {
 
 /*******************************************************/
 //drawGameplayScreen()
+//enable player's visibility
+//instructionBox and continueButton is hidden
+//include player's movement so player could move around
+//
 //
 //
 /*******************************************************/
@@ -106,10 +116,8 @@ function drawGameplayScreen() {
     instructionBox.visible = false;
     continueButton.visible = false;
 
-/*******************************************************/
+
 //player's movements
-//
-/*******************************************************/
     if (kb.pressing('A')) {
         player.vel.x = -5;
     } else if (kb.pressing('D')){
@@ -131,10 +139,14 @@ function drawGameplayScreen() {
         player.vel.y = 0;
     }
 
-    if (millis() - lastFire > 200) {
-        bulletRain()
+    if (millis() - lastFire > 1000) {
+        bulletRain();
         lastFire = millis();
     }
+    if (millis() - lastSpawn > 2000) {
+        spawnCollectibles(); 
+        lastSpawn = millis();
+    } 
 }
 
 /*******************************************************/
@@ -142,19 +154,54 @@ function drawGameplayScreen() {
 //Spawn bullets in a rain-like pattern
 //
 /*******************************************************/
+
+//Changes gameState to 'end'
 let lastFire = 0;
+let lastSpawn = 0;
 function playerHit() {
     gameState = 'end';
 }
+
 function bulletRain() {
-    let x = random(0, 900);
+    let x = random(1, 899);
     bullet = new Sprite(x, 1, 8);
+    bullet.color = ("#fff")
     bullet.vel.y = 5;
     bulletGroup.add(bullet);
     bulletGroup.collides(player, playerHit);
-
+    bulletGroup.collides(wallBot, removeBullet);
 }
 
+//remove bullet's collider so they don't stacked in the box
+function removeBullet() {
+    bullet.collider = "true";
+}
+
+
+function spawnCollectibles() {
+    let x = random(1, 899);
+    let y = random(1, 899);
+    collectible = new Sprite(x, y, 20, 20);
+    collectible.color = "#8ea50c"
+    collectible.life = 300;
+    collectibleGroup.add(collectible);
+    collectibleGroup.collides(player, gainScore);
+}
+
+
+function gainScore(collectible, player) {
+    score++
+    collectible.remove();
+}
+
+/*******************************************************/
+//drawEndScreen()
+//player is hidden, bullets are also hidden
+//enable endBox visibility
+//if mouse is pressed, change gameState to 'instruction'
+//
+//
+/*******************************************************/
 function drawEndScreen() {
     player.visible = false;
     bulletGroup.visible = false;
@@ -165,9 +212,11 @@ function drawEndScreen() {
     }
 }
 
+
+
 /*******************************************************/
 //draw()
-//if gameState = 'start', call drawStartScreen()
+//draw different screen based on gameState
 //
 //
 //

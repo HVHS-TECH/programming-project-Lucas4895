@@ -15,24 +15,31 @@ var score = 0;
 //
 /*******************************************************/
 function setup(){
-    cnv = new Canvas(900,900)
+    canvas = new Canvas(900,900)
+    
 
+//walls
     wallLH  = new Sprite(0, height/2, 15, height, 'k');
-    wallLH.color = "#000"
+    wallLH.color = "#ff8080"
 	wallRH  = new Sprite(900, height/2, 15, height, 'k');
-    wallRH.color = "#321"
+    wallRH.color = "#ff8080"
 	wallTop = new Sprite(windowWidth/2, height, windowWidth, 15, 'k')
-    wallTop.color = "#764"
+    wallTop.color = "#ff8080"
 	wallBot = new Sprite(windowWidth/2, 0, windowWidth, 15, 'k');
-    wallBot.color = "#981"
+    wallBot.color = "#ff8080"
 
+
+//groups
 bulletGroup = new Group();
 collectibleGroup = new Group();
+
+
 //start button
     startButton = new Sprite(width/2,height/2,150,50);
     startButton.color = "#84b3b0";
     startButton.text = "Click anywhere to start";
     startButton.collider = "none";
+
 
 //continue button
     continueButton = new Sprite(width/2,height/2,150,50);
@@ -41,12 +48,14 @@ collectibleGroup = new Group();
     continueButton.visible = false
     continueButton.collider = "none";
 
+
 //instruction box
     instructionBox = new Sprite(width/2, height/2 - 120, 500, 200)
     instructionBox.color = "#fff";
     instructionBox.text = "instruction";
     instructionBox.visible = false;
     instructionBox.collider = "none";
+
 
 //End Screen Box
     endBox = new Sprite(width/2, height/2 - 120, 500, 200)
@@ -68,6 +77,7 @@ collectibleGroup = new Group();
 //So when mouse is pressed, startButton is hidden
 //and gameState is changed to 'instruction'
 //
+//
 /*******************************************************/
 function changeGameState() {
     gameState = 'instruction'
@@ -75,7 +85,7 @@ function changeGameState() {
 }
 
 function drawStartScreen() {
-    if (mouseIsPressed === true) {
+    if (mouse.presses()) {
         setTimeout(changeGameState, 150);  
         startButton.visible = false;
     } 
@@ -89,13 +99,14 @@ function drawStartScreen() {
 //endBox being hidden is for when restarting the game,
 //endBox will stay hidden
 //
+//
 /*******************************************************/
 function drawInstructionScreen() {
     endBox.visible = false;
     continueButton.visible = true;
     instructionBox.visible = true;
 
-    if (mouseIsPressed === true) {       
+    if (mouse.presses()) {       
      gameState = 'gameplay';     
     }
 }
@@ -108,13 +119,13 @@ function drawInstructionScreen() {
 //include player's movement so player could move around
 //
 //
-//
 /*******************************************************/
-
 function drawGameplayScreen() {
     player.visible = true;
+    collectibleGroup.visible = true;
     instructionBox.visible = false;
     continueButton.visible = false;
+
 
 
 //player's movements
@@ -139,6 +150,8 @@ function drawGameplayScreen() {
         player.vel.y = 0;
     }
 
+
+//how fast/when/how frequently the bullets or collectibles will spawn
     if (millis() - lastFire > 1000) {
         bulletRain();
         lastFire = millis();
@@ -153,9 +166,8 @@ function drawGameplayScreen() {
 //bulletRain()
 //Spawn bullets in a rain-like pattern
 //
+//
 /*******************************************************/
-
-//Changes gameState to 'end'
 let lastFire = 0;
 let lastSpawn = 0;
 function playerHit() {
@@ -164,35 +176,42 @@ function playerHit() {
 
 function bulletRain() {
     let x = random(1, 899);
-    bullet = new Sprite(x, 1, 8);
+    bullet = new Sprite(x, 1, 12);
     bullet.color = ("#fff")
-    bullet.vel.y = 5;
+    bullet.vel.y = 7;
     bulletGroup.add(bullet);
     bulletGroup.collides(player, playerHit);
     bulletGroup.collides(wallBot, removeBullet);
 }
 
-//remove bullet's collider so they don't stacked in the box
+
+//remove bullet's collider so they don't get stacked in the box
 function removeBullet() {
     bullet.collider = "true";
 }
 
-
+//spawn collectibles around the canvas
 function spawnCollectibles() {
-    let x = random(1, 899);
-    let y = random(1, 899);
-    collectible = new Sprite(x, y, 20, 20);
+    let x = random(10, 890);
+    let y = random(10, 890);
+    collectible = new Sprite(x, y, 20, 20, 'k');
     collectible.color = "#8ea50c"
     collectible.life = 300;
     collectibleGroup.add(collectible);
     collectibleGroup.collides(player, gainScore);
+    collectibleGroup.collides(bulletGroup, destroyCollectibles);
 }
 
+function destroyCollectibles(collectible, bullet, bulletGroup) {
+    collectible.remove()
+    bullet.remove()
+}
 
 function gainScore(collectible, player) {
     score++
     collectible.remove();
 }
+
 
 /*******************************************************/
 //drawEndScreen()
@@ -203,21 +222,21 @@ function gainScore(collectible, player) {
 //
 /*******************************************************/
 function drawEndScreen() {
+    
     player.visible = false;
+    collectibleGroup.visible = false;
     bulletGroup.visible = false;
     bulletGroup.collider = "none";
     endBox.visible = true
-    if (mouseIsPressed === true) {
+    if (mouse.presses()) {
         setTimeout(changeGameState, 150);  
     }
 }
 
 
-
 /*******************************************************/
 //draw()
 //draw different screen based on gameState
-//
 //
 //
 /*******************************************************/

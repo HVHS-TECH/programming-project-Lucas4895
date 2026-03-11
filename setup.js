@@ -7,7 +7,9 @@
 
 
 let gameState = 'start';
-var score = 0;
+let score = 0;
+let timeLeft = 30;
+let runningTime = 0;
 
 /*******************************************************/
 //Setup
@@ -79,14 +81,11 @@ collectibleGroup = new Group();
 //
 //
 /*******************************************************/
-function changeGameState() {
-    gameState = 'instruction'
 
-}
 
 function drawStartScreen() {
     if (mouse.presses()) {
-        setTimeout(changeGameState, 150);  
+        gameState = 'instruction'
         startButton.visible = false;
     } 
 };
@@ -102,6 +101,8 @@ function drawStartScreen() {
 //
 /*******************************************************/
 function drawInstructionScreen() {
+    timeLeft = 30;
+    score = 0;
     endBox.visible = false;
     continueButton.visible = true;
     instructionBox.visible = true;
@@ -110,7 +111,6 @@ function drawInstructionScreen() {
      gameState = 'gameplay';     
     }
 }
-
 
 /*******************************************************/
 //drawGameplayScreen()
@@ -125,8 +125,6 @@ function drawGameplayScreen() {
     collectibleGroup.visible = true;
     instructionBox.visible = false;
     continueButton.visible = false;
-
-
 
 //player's movements
     if (kb.pressing('A')) {
@@ -212,6 +210,11 @@ function gainScore(collectible, player) {
     collectible.remove();
 }
 
+/*******************************************************/
+//timer
+//
+//
+/*******************************************************/
 
 /*******************************************************/
 //drawEndScreen()
@@ -224,12 +227,11 @@ function gainScore(collectible, player) {
 function drawEndScreen() {
     
     player.visible = false;
-    collectibleGroup.visible = false;
-    bulletGroup.visible = false;
-    bulletGroup.collider = "none";
     endBox.visible = true
+    collectibleGroup.removeAll()
+    bulletGroup.removeAll()
     if (mouse.presses()) {
-        setTimeout(changeGameState, 150);  
+        gameState = 'instruction'
     }
 }
 
@@ -241,6 +243,18 @@ function drawEndScreen() {
 //
 /*******************************************************/
 function draw() {
+
+
+
+    if (millis() - runningTime > 1000) {
+       timeLeft--;
+       runningTime = millis();
+    }
+
+    if (timeLeft <= 0) {
+       gameState = 'end'
+    }
+
     background('#000')
     if (gameState === 'start') {
         drawStartScreen();

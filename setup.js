@@ -18,7 +18,12 @@ let runningTime = 0;
 /*******************************************************/
 function setup(){
     canvas = new Canvas(900,900)
-    
+
+//show time and score
+    infoBox = new Sprite(70, 50, 120, 50, 'k')
+    infoBox.collider = "none";
+    infoBox.color = "#fff"
+
 
 //walls
     wallLH  = new Sprite(0, height/2, 15, height, 'k');
@@ -62,7 +67,6 @@ collectibleGroup = new Group();
 //End Screen Box
     endBox = new Sprite(width/2, height/2 - 120, 500, 200)
     endBox.color = "#fff";
-    endBox.text = "End, click anywhere to restart";
     endBox.visible = false;
     endBox.collider = "none";
 
@@ -103,6 +107,10 @@ function drawStartScreen() {
 function drawInstructionScreen() {
     timeLeft = 30;
     score = 0;
+    player.x = width/2
+    player.y = 850    
+    player.vel.x = 0;
+    player.vel.y = 0;
     endBox.visible = false;
     continueButton.visible = true;
     instructionBox.visible = true;
@@ -122,6 +130,7 @@ function drawInstructionScreen() {
 /*******************************************************/
 function drawGameplayScreen() {
     player.visible = true;
+
     collectibleGroup.visible = true;
     instructionBox.visible = false;
     continueButton.visible = false;
@@ -173,25 +182,22 @@ function playerHit() {
 }
 
 function bulletRain() {
-    let x = random(1, 899);
+    let x = random(1, 890);
     bullet = new Sprite(x, 1, 12);
-    bullet.color = ("#fff")
+    bullet.color = ("#0278ff")
     bullet.vel.y = 7;
     bulletGroup.add(bullet);
     bulletGroup.collides(player, playerHit);
-    bulletGroup.collides(wallBot, removeBullet);
-}
-
-
-//remove bullet's collider so they don't get stacked in the box
-function removeBullet() {
     bullet.collider = "true";
 }
 
+
+
+
 //spawn collectibles around the canvas
 function spawnCollectibles() {
-    let x = random(10, 890);
-    let y = random(10, 890);
+    let x = random(10, 880);
+    let y = random(10, 880);
     collectible = new Sprite(x, y, 20, 20, 'k');
     collectible.color = "#8ea50c"
     collectible.life = 300;
@@ -210,11 +216,7 @@ function gainScore(collectible, player) {
     collectible.remove();
 }
 
-/*******************************************************/
-//timer
-//
-//
-/*******************************************************/
+
 
 /*******************************************************/
 //drawEndScreen()
@@ -225,7 +227,7 @@ function gainScore(collectible, player) {
 //
 /*******************************************************/
 function drawEndScreen() {
-    
+    timeLeft = 30;
     player.visible = false;
     endBox.visible = true
     collectibleGroup.removeAll()
@@ -244,7 +246,13 @@ function drawEndScreen() {
 /*******************************************************/
 function draw() {
 
-
+/*******************************************************/
+//timer
+//
+//
+/*******************************************************/
+    infoBox.text = "time: " + timeLeft + "  score:" + score
+    endBox.text = "End, click anywhere to restart. Score: " + score;
 
     if (millis() - runningTime > 1000) {
        timeLeft--;
@@ -254,6 +262,7 @@ function draw() {
     if (timeLeft <= 0) {
        gameState = 'end'
     }
+
 
     background('#000')
     if (gameState === 'start') {

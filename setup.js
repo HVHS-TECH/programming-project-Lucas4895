@@ -4,7 +4,15 @@
 //
 //
 /*******************************************************/
-
+function preload() {
+    catImg = loadImage("../images/cat.png")
+    cat2Img = loadImage("../images/cat2.png")
+    carrotImg = loadImage("../images/carrot.png")
+    bunnyImg = loadImage("../images/bunny.png")
+    foodImg = loadImage("../images/food.png")
+    bigBunnyImg = loadImage("../images/bigBunny2.png")
+    bigCarrotImg = loadImage("../images/bigCarrot.png")
+}
 
 let gameState = 'start';
 let score = 0;
@@ -66,15 +74,29 @@ collectibleGroup = new Group();
 
 //End Screen Box
     endBox = new Sprite(width/2, height/2 - 120, 500, 200)
+    bigBunny = new Sprite(width/2, height/2 - 200, 100)
+    bigCarrot = new Sprite(width/2 + 30, height/2 - 220, 80)
+    bigBunny.image = (bigBunnyImg);
+    bigCarrot.image = (bigCarrotImg)
     endBox.color = "#fff";
     endBox.visible = false;
     endBox.collider = "none";
+    bigBunny.collider = "none";
+    bigCarrot.collider = "none";
+    bigBunny.visible = false
+    bigCarrot.visible = false
 
 
 //player
-    player = new Sprite(width/2, 850, 50);
-    player.color = ("#775656")
+    player = new Sprite(width/2, 850, 32);
     player.visible = false
+    player.image = (cat2Img);
+
+//bunny
+    bunny = new Sprite(width/2, 30, 32);
+    bunny.visible = false
+    bunny.collider = 'none';
+    bunny.image = (bunnyImg);
 }
 
 
@@ -105,6 +127,8 @@ function drawStartScreen() {
 //
 /*******************************************************/
 function drawInstructionScreen() {
+    bigBunny.visible = false
+    bigCarrot.visible = false
     timeLeft = 30;
     score = 0;
     player.x = width/2
@@ -130,7 +154,7 @@ function drawInstructionScreen() {
 /*******************************************************/
 function drawGameplayScreen() {
     player.visible = true;
-
+    bunny.visible = true;
     collectibleGroup.visible = true;
     instructionBox.visible = false;
     continueButton.visible = false;
@@ -159,7 +183,7 @@ function drawGameplayScreen() {
 
 
 //how fast/when/how frequently the bullets or collectibles will spawn
-    if (millis() - lastFire > 1000) {
+    if (millis() - lastFire > 500) {
         bulletRain();
         lastFire = millis();
     }
@@ -182,10 +206,11 @@ function playerHit() {
 }
 
 function bulletRain() {
-    let x = random(1, 890);
-    bullet = new Sprite(x, 1, 12);
+    let x = random(10, 890);
+    bullet = new Sprite(x, 1, 8);
     bullet.color = ("#0278ff")
     bullet.vel.y = 7;
+    bullet.image = (carrotImg);
     bulletGroup.add(bullet);
     bulletGroup.collides(player, playerHit);
     bullet.collider = "true";
@@ -197,10 +222,11 @@ function bulletRain() {
 //spawn collectibles around the canvas
 function spawnCollectibles() {
     let x = random(10, 880);
-    let y = random(10, 880);
+    let y = random(10, 850);
     collectible = new Sprite(x, y, 20, 20, 'k');
     collectible.color = "#8ea50c"
     collectible.life = 300;
+    collectible.image = (foodImg);
     collectibleGroup.add(collectible);
     collectibleGroup.collides(player, gainScore);
     collectibleGroup.collides(bulletGroup, destroyCollectibles);
@@ -229,6 +255,9 @@ function gainScore(collectible, player) {
 function drawEndScreen() {
     timeLeft = 30;
     player.visible = false;
+    bunny.visible = false;
+    bigBunny.visible = true;
+    bigCarrot.visible = true;
     endBox.visible = true
     collectibleGroup.removeAll()
     bulletGroup.removeAll()
@@ -264,7 +293,7 @@ function draw() {
     }
 
 
-    background('#000')
+    background('#87CEEB')
     if (gameState === 'start') {
         drawStartScreen();
     }

@@ -5,12 +5,12 @@
 //
 /*******************************************************/
 function preload() {
-    catImg = loadImage("../images/cat2.png")
-    carrotImg = loadImage("../images/carrot.png")
-    bunnyImg = loadImage("../images/bunny.png")
-    foodImg = loadImage("../images/food.png")
-    bigBunnyImg = loadImage("../images/bigBunny2.png")
-    bigCarrotImg = loadImage("../images/bigCarrot.png")
+    catImg = loadImage("images/cat2.png")
+    carrotImg = loadImage("images/carrot.png")
+    bunnyImg = loadImage("images/bunny.png")
+    foodImg = loadImage("images/food.png")
+    bigBunnyImg = loadImage("images/bigBunny2.png")
+    bigCarrotImg = loadImage("images/bigCarrot.png")
 }
 
 let gameState = 'start';
@@ -77,7 +77,7 @@ collectibleGroup = new Group();
     bigCarrot = new Sprite(width/2 + 30, height/2 - 220, 80)
     bigBunny.image = (bigBunnyImg);
     bigCarrot.image = (bigCarrotImg)
-    endBox.color = "#87CEEB";
+    endBox.color = "#fff";
     endBox.visible = false;
     endBox.collider = "none";
     bigBunny.collider = "none";
@@ -88,7 +88,7 @@ collectibleGroup = new Group();
 
 //2nd end screen
     timesOutBox = new Sprite(width/2, height/2 - 120, 500, 200)
-    timesOutBox.color = "#87CEEB";
+    timesOutBox.color = "#fff";
     timesOutBox.visible = false;
     timesOutBox.collider = "none";
 
@@ -115,6 +115,7 @@ collectibleGroup = new Group();
 
 
 function drawStartScreen() {
+    infoBox.visible = false;
     if (mouse.presses()) {
         gameState = 'instruction'
         startButton.visible = false;
@@ -134,6 +135,7 @@ function drawStartScreen() {
 function drawInstructionScreen() {
     bigBunny.visible = false
     bigCarrot.visible = false
+    infoBox.visible = false;
     timeLeft = 30;
     score = 0;
     player.x = width/2
@@ -161,6 +163,7 @@ function drawInstructionScreen() {
 function drawGameplayScreen() {
     player.visible = true;
     bunny.visible = true;
+    infoBox.visible = true;
     collectibleGroup.visible = true;
     instructionBox.visible = false;
     continueButton.visible = false;
@@ -260,6 +263,7 @@ function drawEndScreen() {
     bunny.visible = false;
     bigBunny.visible = true;
     bigCarrot.visible = true;
+    infoBox.visible = false;
     endBox.visible = true
     collectibleGroup.removeAll()
     bulletGroup.removeAll()
@@ -273,6 +277,7 @@ function drawTimesOutScreen() {
     timeLeft = 30;
     player.visible = false;
     bunny.visible = false;
+    infoBox.visible = false;
     timesOutBox.visible = true
     collectibleGroup.removeAll()
     bulletGroup.removeAll()

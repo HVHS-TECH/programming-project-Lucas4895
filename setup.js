@@ -5,8 +5,7 @@
 //
 /*******************************************************/
 function preload() {
-    catImg = loadImage("../images/cat.png")
-    cat2Img = loadImage("../images/cat2.png")
+    catImg = loadImage("../images/cat2.png")
     carrotImg = loadImage("../images/carrot.png")
     bunnyImg = loadImage("../images/bunny.png")
     foodImg = loadImage("../images/food.png")
@@ -51,14 +50,14 @@ collectibleGroup = new Group();
 
 //start button
     startButton = new Sprite(width/2,height/2,150,50);
-    startButton.color = "#84b3b0";
+    startButton.color = "#fff";
     startButton.text = "Click anywhere to start";
     startButton.collider = "none";
 
 
 //continue button
     continueButton = new Sprite(width/2,height/2,150,50);
-    continueButton.color = "#84b3b0";
+    continueButton.color = "#fff";
     continueButton.text = "Click anywhere to continue"
     continueButton.visible = false
     continueButton.collider = "none";
@@ -78,7 +77,7 @@ collectibleGroup = new Group();
     bigCarrot = new Sprite(width/2 + 30, height/2 - 220, 80)
     bigBunny.image = (bigBunnyImg);
     bigCarrot.image = (bigCarrotImg)
-    endBox.color = "#fff";
+    endBox.color = "#87CEEB";
     endBox.visible = false;
     endBox.collider = "none";
     bigBunny.collider = "none";
@@ -87,10 +86,16 @@ collectibleGroup = new Group();
     bigCarrot.visible = false
 
 
+//2nd end screen
+    timesOutBox = new Sprite(width/2, height/2 - 120, 500, 200)
+    timesOutBox.color = "#87CEEB";
+    timesOutBox.visible = false;
+    timesOutBox.collider = "none";
+
 //player
     player = new Sprite(width/2, 850, 32);
     player.visible = false
-    player.image = (cat2Img);
+    player.image = (catImg);
 
 //bunny
     bunny = new Sprite(width/2, 30, 32);
@@ -102,8 +107,8 @@ collectibleGroup = new Group();
 
 /*******************************************************/
 //drawStartScreen()
-//So when mouse is pressed, startButton is hidden
-//and gameState is changed to 'instruction'
+//Mouse presses --> startButton is hidden
+//and gameState will be changed to 'instruction'
 //
 //
 /*******************************************************/
@@ -120,7 +125,7 @@ function drawStartScreen() {
 /*******************************************************/
 //drawInstructionScreen()
 //enable visibility of continueButton and continueBox
-//If mouse is pressed then gameState is changed to 'gamePlay'
+//If mouse presses --> gameState change to 'gamePlay'
 //endBox being hidden is for when restarting the game,
 //endBox will stay hidden
 //
@@ -147,7 +152,7 @@ function drawInstructionScreen() {
 /*******************************************************/
 //drawGameplayScreen()
 //enable player's visibility
-//instructionBox and continueButton is hidden
+//instructionBox and continueButton --> hidden
 //include player's movement so player could move around
 //
 //
@@ -182,7 +187,7 @@ function drawGameplayScreen() {
     }
 
 
-//how fast/when/how frequently the bullets or collectibles will spawn
+//how frequently the bullets and collectibles will spawn
     if (millis() - lastFire > 500) {
         bulletRain();
         lastFire = millis();
@@ -192,6 +197,7 @@ function drawGameplayScreen() {
         lastSpawn = millis();
     } 
 }
+
 
 /*******************************************************/
 //bulletRain()
@@ -219,7 +225,7 @@ function bulletRain() {
 
 
 
-//spawn collectibles around the canvas
+//spawn collectibles
 function spawnCollectibles() {
     let x = random(10, 880);
     let y = random(10, 850);
@@ -229,14 +235,9 @@ function spawnCollectibles() {
     collectible.image = (foodImg);
     collectibleGroup.add(collectible);
     collectibleGroup.collides(player, gainScore);
-    collectibleGroup.collides(bulletGroup, destroyCollectibles);
+    collectibleGroup.collides(bulletGroup);
 }
-
-function destroyCollectibles(collectible, bullet, bulletGroup) {
-    collectible.remove()
-    bullet.remove()
-}
-
+//Gain score by collecting collectibles
 function gainScore(collectible, player) {
     score++
     collectible.remove();
@@ -248,7 +249,7 @@ function gainScore(collectible, player) {
 //drawEndScreen()
 //player is hidden, bullets are also hidden
 //enable endBox visibility
-//if mouse is pressed, change gameState to 'instruction'
+//mouse presses --> change gameState to 'instruction'
 //
 //
 /*******************************************************/
@@ -266,22 +267,26 @@ function drawEndScreen() {
     }
 }
 
+//similar to drawEndScreen but with different text
+function drawTimesOutScreen() {
+    timeLeft = 30;
+    player.visible = false;
+    bunny.visible = false;
+    timesOutBox.visible = true
+    collectibleGroup.removeAll()
+    bulletGroup.removeAll()
+    if (mouse.presses()) {
+        gameState = 'instruction'
+    }
+}
 
-/*******************************************************/
-//draw()
-//draw different screen based on gameState
-//
-//
-/*******************************************************/
+//Draw
 function draw() {
 
-/*******************************************************/
 //timer
-//
-//
-/*******************************************************/
     infoBox.text = "time: " + timeLeft + "  score:" + score
     endBox.text = "End, click anywhere to restart. Score: " + score;
+    timesOutBox.text = "You successfully escaped the bunny! You've collected " + score + " cans of tuna!!";
 
     if (millis() - runningTime > 1000) {
        timeLeft--;
@@ -289,7 +294,7 @@ function draw() {
     }
 
     if (timeLeft <= 0) {
-       gameState = 'end'
+       gameState = 'timesOut'
     }
 
 
@@ -308,5 +313,9 @@ function draw() {
 
     if (gameState === 'end') {
         drawEndScreen();
+    }
+
+    if (gameState === 'timesOut') {
+        drawTimesOutScreen();
     }
 }

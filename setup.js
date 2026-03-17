@@ -141,6 +141,7 @@ function drawInstructionScreen() {
     player.vel.x = 0;
     player.vel.y = 0;
     endBox.visible = false;
+    timesOutBox.visible = false;
     continueButton.visible = true;
     instructionBox.visible = true;
 

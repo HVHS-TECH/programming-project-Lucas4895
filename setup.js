@@ -239,7 +239,6 @@ function spawnCollectibles() {
     collectible.image = (foodImg);
     collectibleGroup.add(collectible);
     collectibleGroup.collides(player, gainScore);
-    collectibleGroup.collides(bulletGroup);
 }
 //Gain score by collecting collectibles
 function gainScore(collectible, player) {

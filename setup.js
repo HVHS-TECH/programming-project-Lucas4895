@@ -11,6 +11,8 @@ function preload() {
     foodImg = loadImage("images/food.png")
     bigBunnyImg = loadImage("images/bigBunny2.png")
     bigCarrotImg = loadImage("images/bigCarrot.png")
+    bigFoodImg = loadImage("images/bigFood.png")
+    bigCatImg = loadImage("images/bigCat.png")
 }
 
 let gameState = 'start';
@@ -66,7 +68,7 @@ collectibleGroup = new Group();
 //instruction box
     instructionBox = new Sprite(width/2, height/2 - 120, 500, 200)
     instructionBox.color = "#fff";
-    instructionBox.text = "instruction";
+    instructionBox.text = "W,A,S,D to move. Collect the food while avoid getting hit by the carrots";
     instructionBox.visible = false;
     instructionBox.collider = "none";
 
@@ -88,9 +90,17 @@ collectibleGroup = new Group();
 
 //2nd end screen
     timesOutBox = new Sprite(width/2, height/2 - 120, 500, 200)
+    bigCat = new Sprite(width/2 - 10, height/2 - 230, 100)
+    bigFood = new Sprite(width/2 + 60, height/2 - 220, 80)
+    bigCat.image = (bigCatImg);
+    bigFood.image = (bigFoodImg)
     timesOutBox.color = "#fff";
     timesOutBox.visible = false;
+    bigCat.collider = "none";
+    bigFood.collider = "none";
     timesOutBox.collider = "none";
+    bigCat.visible = false
+    bigFood.visible = false
 
 //player
     player = new Sprite(width/2, 850, 32);
@@ -135,6 +145,9 @@ function drawStartScreen() {
 function drawInstructionScreen() {
     bigBunny.visible = false
     bigCarrot.visible = false
+    infoBox.visible = false;
+    bigCat.visible = false
+    bigFood.visible = false
     infoBox.visible = false;
     timeLeft = 30;
     score = 0;
@@ -243,9 +256,9 @@ function spawnCollectibles() {
 //Gain score by collecting collectibles
 function gainScore(collectible, player) {
     score++
+    timeLeft++
     collectible.remove();
 }
-
 
 
 /*******************************************************/
@@ -274,6 +287,8 @@ function drawEndScreen() {
 //similar to drawEndScreen but with different text
 function drawTimesOutScreen() {
     timeLeft = 30;
+    bigCat.visible = true
+    bigFood.visible = true
     player.visible = false;
     bunny.visible = false;
     infoBox.visible = false;
@@ -306,21 +321,13 @@ function draw() {
     background('#87CEEB')
     if (gameState === 'start') {
         drawStartScreen();
-    }
-
-    if (gameState === 'instruction') {
+    } else if (gameState === 'instruction') {
         drawInstructionScreen();
-    }
-
-    if (gameState === 'gameplay') {
+    } else if (gameState === 'gameplay') {
         drawGameplayScreen();
-    }
-
-    if (gameState === 'end') {
+    } else if (gameState === 'end') {
         drawEndScreen();
-    }
-
-    if (gameState === 'timesOut') {
+    } else if (gameState === 'timesOut') {
         drawTimesOutScreen();
     }
 }

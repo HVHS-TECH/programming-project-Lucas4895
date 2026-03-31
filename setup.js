@@ -46,9 +46,8 @@ function setup(){
 
 
 //groups
-bulletGroup = new Group();
-collectibleGroup = new Group();
-
+    bulletGroup = new Group();
+    collectibleGroup = new Group();
 
 //start button
     startButton = new Sprite(width/2,height/2,150,50);
@@ -103,7 +102,7 @@ collectibleGroup = new Group();
     bigFood.visible = false
 
 //player
-    player = new Sprite(width/2, 850, 32);
+    player = new Sprite(width/2, 850, 24);
     player.visible = false
     player.image = (catImg);
 
@@ -122,6 +121,7 @@ collectibleGroup = new Group();
 //
 //
 /*******************************************************/
+
 
 
 function drawStartScreen() {
@@ -174,6 +174,7 @@ function drawInstructionScreen() {
 //
 /*******************************************************/
 function drawGameplayScreen() {
+
     player.visible = true;
     bunny.visible = true;
     infoBox.visible = true;
@@ -241,12 +242,11 @@ function bulletRain() {
 
 
 
-
 //spawn collectibles
 function spawnCollectibles() {
     let x = random(10, 880);
     let y = random(10, 850);
-    collectible = new Sprite(x, y, 20, 20, 'k');
+    collectible = new Sprite(x, y, 25, 25, 'k');
     collectible.color = "#8ea50c"
     collectible.life = 300;
     collectible.image = (foodImg);
@@ -270,6 +270,7 @@ function gainScore(collectible, player) {
 //
 /*******************************************************/
 function drawEndScreen() {
+
     timeLeft = 30;
     player.visible = false;
     bunny.visible = false;
@@ -279,6 +280,13 @@ function drawEndScreen() {
     endBox.visible = true
     collectibleGroup.removeAll()
     bulletGroup.removeAll()
+//It supposes to spawn a line of carrots across the page, it's intended
+    for (i = 0; i < 1; i++) {
+        floatingCarrot = new Sprite(1,450, 8, "none")
+        floatingCarrot.image = (carrotImg)
+        floatingCarrot.life = 45;
+        floatingCarrot.vel.x = 20;
+    }
     if (mouse.presses()) {
         gameState = 'instruction'
     }
@@ -295,14 +303,21 @@ function drawTimesOutScreen() {
     timesOutBox.visible = true
     collectibleGroup.removeAll()
     bulletGroup.removeAll()
+//It supposes to spawn a line of food across the page, it's intended
+    for (i = 0; i < 1; i++) {
+        floatingFood = new Sprite(1,450, 8, "none")
+        floatingFood.image = (foodImg)
+        floatingFood.life = 45;
+        floatingFood.vel.x = 20;
+    }
     if (mouse.presses()) {
         gameState = 'instruction'
     }
 }
 
+
 //Draw
 function draw() {
-
 //timer
     infoBox.text = "time: " + timeLeft + "  score:" + score
     endBox.text = "End, click anywhere to restart. Score: " + score;

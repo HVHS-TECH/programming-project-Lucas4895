@@ -280,7 +280,7 @@ function drawEndScreen() {
     endBox.visible = true
     collectibleGroup.removeAll()
     bulletGroup.removeAll()
-//It supposes to spawn a line of carrots across the page, it's intended
+//It supposes to spawn a line of carrots across the page, it's intended (decoration)
     for (i = 0; i < 1; i++) {
         floatingCarrot = new Sprite(1,450, 8, "none")
         floatingCarrot.image = (carrotImg)
@@ -303,12 +303,12 @@ function drawTimesOutScreen() {
     timesOutBox.visible = true
     collectibleGroup.removeAll()
     bulletGroup.removeAll()
-//It supposes to spawn a line of food across the page, it's intended
+//It supposes to spawn a line of food across the page, it's intended (decoration)
     for (i = 0; i < 1; i++) {
         floatingFood = new Sprite(1,450, 8, "none")
         floatingFood.image = (foodImg)
-        floatingFood.life = 45;
-        floatingFood.vel.x = 20;
+        floatingFood.life = 28;
+        floatingFood.vel.x = 32;
     }
     if (mouse.presses()) {
         gameState = 'instruction'
@@ -323,7 +323,7 @@ function draw() {
     endBox.text = "End, click anywhere to restart. Score: " + score;
     timesOutBox.text = "You successfully escaped the bunny! You've collected " + score + " cans of tuna!!";
 
-    if (millis() - runningTime > 1000) {
+    if (millis() - runningTime > 1) {
        timeLeft--;
        runningTime = millis();
     }

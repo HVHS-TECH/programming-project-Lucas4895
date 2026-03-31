@@ -323,7 +323,7 @@ function draw() {
     endBox.text = "End, click anywhere to restart. Score: " + score;
     timesOutBox.text = "You successfully escaped the bunny! You've collected " + score + " cans of tuna!!";
 
-    if (millis() - runningTime > 1) {
+    if (millis() - runningTime > 1000) {
        timeLeft--;
        runningTime = millis();
     }

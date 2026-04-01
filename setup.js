@@ -72,32 +72,32 @@ function setup(){
     instructionBox.collider = "none"
 
 
-//End Screen Box
-    endBox = new Sprite(width/2, height/2 - 120, 500, 200)
+//Game Over Box
+    gameOver = new Sprite(width/2, height/2 - 120, 500, 200)
     bigBunny = new Sprite(width/2, height/2 - 200, 100)
     bigCarrot = new Sprite(width/2 + 30, height/2 - 220, 80)
     bigBunny.image = (bigBunnyImg)
     bigCarrot.image = (bigCarrotImg)
-    endBox.color = "#fff"
-    endBox.visible = false
-    endBox.collider = "none"
+    gameOver.color = "#fff"
+    gameOver.visible = false
+    gameOver.collider = "none"
     bigBunny.collider = "none"
     bigCarrot.collider = "none"
     bigBunny.visible = false
     bigCarrot.visible = false
 
 
-//2nd end screen
-    timesOutBox = new Sprite(width/2, height/2 - 120, 500, 200)
+//timeout screen
+    timeoutBox = new Sprite(width/2, height/2 - 120, 500, 200)
     bigCat = new Sprite(width/2 - 10, height/2 - 230, 100)
     bigFood = new Sprite(width/2 + 60, height/2 - 220, 80)
     bigCat.image = (bigCatImg)
     bigFood.image = (bigFoodImg)
-    timesOutBox.color = "#fff"
-    timesOutBox.visible = false
+    timeoutBox.color = "#fff"
+    timeoutBox.visible = false
     bigCat.collider = "none"
     bigFood.collider = "none"
-    timesOutBox.collider = "none"
+    timeoutBox.collider = "none"
     bigCat.visible = false
     bigFood.visible = false
 
@@ -155,8 +155,8 @@ function drawInstructionScreen() {
     player.y = 850    
     player.vel.x = 0
     player.vel.y = 0
-    endBox.visible = false
-    timesOutBox.visible = false
+    gameOver.visible = false
+    timeoutBox.visible = false
     continueButton.visible = true
     instructionBox.visible = true
 
@@ -231,7 +231,7 @@ function drawGameplayScreen() {
 let lastFire = 0
 let lastSpawn = 0
 function playerHit() {
-    gameState = 'end'
+    gameState = 'gameover'
 }
 
 function bulletRain() {
@@ -274,15 +274,14 @@ function gainScore(collectible, player) {
 //
 //
 /*******************************************************/
-function drawEndScreen() {
-
+function drawGameOverScreen() {
     timeLeft = 30
     player.visible = false
     bunny.visible = false
     bigBunny.visible = true
     bigCarrot.visible = true
     infoBox.visible = false
-    endBox.visible = true
+    gameOver.visible = true
     collectibleGroup.removeAll()
     bulletGroup.removeAll()
 //It supposes to spawn a line of carrots across the page, it's intended (decoration)
@@ -298,14 +297,14 @@ function drawEndScreen() {
 }
 
 //similar to drawEndScreen but with different text
-function drawTimesOutScreen() {
+function drawTimeoutScreen() {
     timeLeft = 30;
     bigCat.visible = true
     bigFood.visible = true
     player.visible = false
     bunny.visible = false
     infoBox.visible = false
-    timesOutBox.visible = true
+    timeoutBox.visible = true
     collectibleGroup.removeAll()
     bulletGroup.removeAll()
 //It supposes to spawn a line of food across the page, it's intended (decoration)
@@ -324,11 +323,11 @@ function drawTimesOutScreen() {
 function draw() {
 //timer
     infoBox.text = "time: " + timeLeft + "  score:" + score
-    endBox.text = "End, click anywhere to restart. Score: " + score
-    timesOutBox.text = "You successfully escaped the bunny! You've collected " + score + " cans of tuna!!"
+    gameOver.text = "Click anywhere to restart. Score: " + score
+    timeoutBox.text = "You escaped the bunny! You've collected " + score + " cans of tuna!! Click anywhere to restart"
 
     if (timeLeft <= 0) {
-       gameState = 'timesOut'
+       gameState = 'timeout'
     }
 
 
@@ -339,9 +338,9 @@ function draw() {
         drawInstructionScreen();
     } else if (gameState === 'gameplay') {
         drawGameplayScreen();
-    } else if (gameState === 'end') {
-        drawEndScreen();
-    } else if (gameState === 'timesOut') {
-        drawTimesOutScreen();
+    } else if (gameState === 'gameover') {
+        drawGameOverScreen();
+    } else if (gameState === 'timeout') {
+        drawTimeoutScreen();
     }
 }

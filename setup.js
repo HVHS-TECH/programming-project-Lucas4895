@@ -208,7 +208,7 @@ function drawGameplayScreen() {
 
 
 //how frequently the bullets and collectibles will spawn
-    if (millis() - lastFire > 100) {
+    if (millis() - lastFire > 500) {
         bulletRain()
         lastFire = millis()
     }

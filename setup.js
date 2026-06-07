@@ -4,6 +4,8 @@
 //
 //
 /*******************************************************/
+let scoreSent = false; // Prevents spamming Firebase inside the draw loop
+
 function preload() {
     catImg = loadImage("images/cat.png")
     carrotImg = loadImage("images/carrot.png")
@@ -206,7 +208,7 @@ function drawGameplayScreen() {
 
 
 //how frequently the bullets and collectibles will spawn
-    if (millis() - lastFire > 500) {
+    if (millis() - lastFire > 100) {
         bulletRain()
         lastFire = millis()
     }
@@ -275,6 +277,13 @@ function gainScore(collectible, player) {
 //
 /*******************************************************/
 function drawGameOverScreen() {
+    // ---- FIREBASE INJECTION START ----
+    if (scoreSent === false) {
+        fb_updateScore(score); // Send the current score variable to Firebase
+        scoreSent = true;      // Lock the gate so it doesn't send again
+    }
+    // ---- FIREBASE INJECTION END ----
+
     timeLeft = 30
     player.visible = false
     bunny.visible = false
@@ -298,6 +307,13 @@ function drawGameOverScreen() {
 
 //similar to drawEndScreen but with different text
 function drawTimeoutScreen() {
+    // ---- FIREBASE INJECTION START ----
+    if (scoreSent === false) {
+        fb_updateScore(score); // Send the current score variable to Firebase
+        scoreSent = true;      // Lock the gate so it doesn't send again
+    }
+    // ---- FIREBASE INJECTION END ----
+
     timeLeft = 30;
     bigCat.visible = true
     bigFood.visible = true
